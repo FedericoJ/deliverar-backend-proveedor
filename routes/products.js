@@ -14,12 +14,12 @@ router.post('/createProduct', async function(req, res, next) {
   });
 
 
-  router.get('/getProductById', async function(req, res, next) {
+  router.get('/getProductByCode', async function(req, res, next) {
     try {
 
-      const result= await products.getMultimedia(req.query)  
+      const result= await products.getProductbyCode(req.query)  
       
-      res.status(result.code).json(result.multimedia);
+      res.status(result.code).json(result.product);
 
     } catch (err) {
       console.error(`Error obteniendo multimedia`, err.message);
