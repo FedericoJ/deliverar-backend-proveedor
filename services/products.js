@@ -2,21 +2,22 @@ const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
 
-async function guardarMultimedia(multimedia) {
+async function saveProducts(product) {
 
 
     try {
         const result = await db.query(
-            `insert into multimedia ( idPaso, tipo_contenido,extension, urlcontenido) 
+            `insert into productos ( CodProducto, Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,Usuario) 
             VALUES 
-            (${multimedia.idPaso}, '${multimedia.tipo_contenido}', '${multimedia.extension}', '${multimedia.url}')`
+            (${product.codProducto}, '${product.descripcion}', '${product.imagen}', ${product.stock}, 
+            ${product.precio} ,  ${product.medStock} , ${product.fecAlta} ,  ${product.usuario} )`
         );
 
 
-        let message = 'Error guardando los datos multimedia';
+        let message = 'Error guardando los datos del producto';
 
         if (result.affectedRows) {
-            message = 'Multimedia guardada correctamente';
+            message = 'Producto guardado correctamente';
         }
 
         return { code: 201, message: message }
@@ -29,21 +30,19 @@ async function guardarMultimedia(multimedia) {
 }
 
 
-async function getMultimedia(multimedia) {
+async function getProducts() {
 
     // Creating a new Mongoose Object by using the new keyword
     try {
         // Find the User 
 
         const result = await db.query(
-            `select tipo_contenido,urlContenido,p.idPaso,m.extension from multimedia m 
-            inner join pasos p on p.idPaso = m.idPaso
-            where p.idReceta=${multimedia.idReceta}`
+            `select CodProducto,Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,FecModificacion,Usuario from productos `
         );
 
         const data = helper.emptyOrRows(result);
 
-        return { code: 201, multimedia: data };
+        return { code: 201, products: data };
 
     } catch (e) {
         // return a Error message describing the reason     
@@ -252,12 +251,6 @@ async function getConversiones(unidad) {
 
 
 module.exports = {
-    guardarMultimedia,
-    getIngredientes,
-    getMultimedia,
-    getTiposreceta,
-    getConversiones,
-    getIngredienteUtilizadoPorReceta,
-    postIngredienteUtilizadoPorReceta,
-    getUnidades
+    saveProducts,
+    getProducts
 }
