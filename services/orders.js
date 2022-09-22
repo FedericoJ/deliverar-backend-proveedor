@@ -64,7 +64,7 @@ async function getOrderById(order) {
 
         const data = helper.emptyOrRows(result);
 
-        return { code: 201, product: data };
+        return { code: 201, orders: data };
 
     } catch (e) {
         // return a Error message describing the reason     
@@ -86,7 +86,7 @@ async function getOrderbyFranquicia(order) {
 
         const data = helper.emptyOrRows(result);
 
-        return { code: 201, product: data };
+        return { code: 201, orders: data };
 
     } catch (e) {
         // return a Error message describing the reason     
@@ -97,8 +97,8 @@ async function getOrderbyFranquicia(order) {
 
 
 module.exports = {
-    saveProducts,
-    getProducts,
-    getProductbyCode,
-    getProductByDescription
+    saveOrder,
+    getOrders,
+    getOrderById,
+    getOrderbyFranquicia
 }
