@@ -9,8 +9,8 @@ async function saveProducts(product) {
         const result = await db.query(
             `insert into productos ( CodProducto, Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,Usuario) 
             VALUES 
-            (${product.codProducto}, '${product.descripcion}', '${product.imagen}', ${product.stock}, 
-            ${product.precio} ,  ${product.medStock} , ${product.fecAlta} ,  ${product.usuario} )`
+            ('${product.codProducto}', '${product.descripcion}', '${product.imagen}', ${product.stock}, 
+            ${product.precio} ,  ${product.medStock} , '${product.fecAlta}' , '${product.usuario}' )`
         );
 
 
