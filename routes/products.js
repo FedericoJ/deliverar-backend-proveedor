@@ -27,6 +27,19 @@ router.post('/createProduct', async function(req, res, next) {
     }
   });
 
+  router.get('/getProductByDescription', async function(req, res, next) {
+    try {
+
+      const result= await products.getProductByDescription(req.query)  
+      
+      res.status(result.code).json(result.product);
+
+    } catch (err) {
+      console.error(`Error obteniendo multimedia`, err.message);
+      next(err);
+    }
+  });
+
   router.get('/getProducts', async function(req, res, next) {
     try {
 
