@@ -7,10 +7,10 @@ async function saveProducts(product) {
 
     try {
         const result = await db.query(
-            `insert into productos ( CodProducto, Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,Usuario) 
+            `insert into productos ( CodProducto, Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,Usuario,CuitProveedor) 
             VALUES 
             ('${product.codProducto}', '${product.descripcion}', '${product.imagen}', ${product.stock}, 
-            ${product.precio} ,  ${product.medStock} , '${product.fecAlta}' , '${product.usuario}' )`
+            ${product.precio} ,  ${product.medStock} , '${product.fecAlta}' , '${product.usuario}',${product.cuit} )`
         );
 
 
@@ -59,7 +59,7 @@ async function getProductbyCode(product) {
 
         const result = await db.query(
             `select CodProducto,Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,FecModificacion,Usuario from productos 
-            where UPPER(CodProducto)=UPPER('${product.codProducto}')`
+            where UPPER(CodProducto)=UPPER('${product.codProducto}') and CuitProveedor =${product.cuit}`
         );
 
         const data = helper.emptyOrRows(result);
@@ -81,7 +81,7 @@ async function getProductByDescription(product) {
 
         const result = await db.query(
             `select CodProducto,Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,FecModificacion,Usuario from productos 
-            where Descripcion LIKE '%${product.descripcion}%'`
+            where Descripcion LIKE '%${product.descripcion}%' and CuitProveedor =${product.cuit}`
         );
 
         const data = helper.emptyOrRows(result);
