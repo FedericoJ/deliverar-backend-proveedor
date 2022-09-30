@@ -8,7 +8,7 @@ router.post('/createOrder', async function(req, res, next) {
     try {
       res.json(await order.saveOrder(req.body));
     } catch (err) {
-      console.error(`Error guardando los archivos multimedia del paso`, err.message);
+      console.error(`Error creando la orden`, err.message);
       next(err);
     }
   });
@@ -22,7 +22,7 @@ router.post('/createOrder', async function(req, res, next) {
       res.status(result.code).json(result.orders);
 
     } catch (err) {
-      console.error(`Error obteniendo multimedia`, err.message);
+      console.error(`Error obteniendo la orden`, err.message);
       next(err);
     }
   });
@@ -35,7 +35,7 @@ router.post('/createOrder', async function(req, res, next) {
       res.status(result.code).json(result.orders);
 
     } catch (err) {
-      console.error(`Error obteniendo multimedia`, err.message);
+      console.error(`Error obteniendo orden por franquicia`, err.message);
       next(err);
     }
   });
@@ -48,7 +48,7 @@ router.post('/createOrder', async function(req, res, next) {
       res.status(result.code).json(result.orders);
 
     } catch (err) {
-      console.error(`Error obteniendo los tipos de receta`, err.message);
+      console.error(`Error obteniendo ordenes`, err.message);
       next(err);
     }
   });
