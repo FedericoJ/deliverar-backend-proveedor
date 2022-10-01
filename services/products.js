@@ -95,10 +95,63 @@ async function getProductByDescription(product) {
 
 }
 
+async function updateProductByCode(product) {
+
+    // Creating a new Mongoose Object by using the new keyword
+    try {
+        // Find the User 
+
+        const result = await db.query(
+            `update productos
+            set Descripcion='${product.descripcion}',
+            Imagen='${product.imagen}',
+            Stock='${product.stock}',
+            Precio='${product.precio}',
+            MediaStock='${product.mediastock}',
+            FecModificacion=now(),
+            Usuario='${product.usuario}'
+            where CodProducto = '${product.CodProducto}' and CuitProveedor =${product.cuit}`
+        );
+
+        const data = helper.emptyOrRows(result);
+
+        return { code: 201, product: data };
+
+    } catch (e) {
+        // return a Error message describing the reason     
+        return { code: 400, message: e.message };
+    }
+
+}
+
+async function deleteProductByCode(product) {
+
+    // Creating a new Mongoose Object by using the new keyword
+    try {
+        // Find the User 
+
+        const result = await db.query(
+            `delete from productos
+            where CodProducto = '${product.CodProducto}' and CuitProveedor =${product.cuit}`
+        );
+
+        const data = helper.emptyOrRows(result);
+
+        return { code: 201, product: data };
+
+    } catch (e) {
+        // return a Error message describing the reason     
+        return { code: 400, message: e.message };
+    }
+
+}
+
 
 module.exports = {
     saveProducts,
     getProducts,
     getProductbyCode,
-    getProductByDescription
+    getProductByDescription,
+    updateProductByCode,
+    deleteProductByCode
 }

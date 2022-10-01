@@ -55,7 +55,8 @@ async function getOrders() {
         // Find the User 
 
         const result = await db.query(
-            `select IdPedido, Usuario, Total, SnAprobado, fecAlta, FecModificacion, IdFranquicia,SnPago `
+            `select IdPedido, Usuario, Total, SnAprobado, fecAlta, FecModificacion, IdFranquicia,SnPago, Estado 
+            from pedidos`
         );
 
         const data = helper.emptyOrRows(result);
@@ -100,7 +101,7 @@ async function getOrderById(order) {
         // Find the User 
 
         const result = await db.query(
-            `select IdPedido, Usuario, Total, SnAprobado, fecAlta, FecModificacion, IdFranquicia,SnPago from pedidos 
+            `select IdPedido, Usuario, Total, SnAprobado, fecAlta, FecModificacion, IdFranquicia,SnPago, Estado from pedidos 
             where IdPedido=${order.id}`
         );
 
@@ -122,8 +123,74 @@ async function getOrderbyFranquicia(order) {
         // Find the User 
 
         const result = await db.query(
-            `select IdPedido, Usuario, Total, SnAprobado, fecAlta, FecModificacion, IdFranquicia,SnPago from pedidos 
+            `select IdPedido, Usuario, Total, SnAprobado, fecAlta, FecModificacion, IdFranquicia,SnPago, Estado from pedidos 
             where IdFranquicia =${order.idFranquicia}`
+        );
+
+        const data = helper.emptyOrRows(result);
+
+        return { code: 201, orders: data };
+
+    } catch (e) {
+        // return a Error message describing the reason     
+        return { code: 400, message: e.message };
+    }
+
+}
+
+async function getOrdersOnProgress(order) {
+
+    // Creating a new Mongoose Object by using the new keyword
+    try {
+        // Find the User 
+
+        const result = await db.query(
+            `select count(*) as Cantidad from pedidos 
+            where IdFranquicia =${order.idFranquicia} and SnAprobado='S'`
+        );
+
+        const data = helper.emptyOrRows(result);
+
+        return { code: 201, orders: data };
+
+    } catch (e) {
+        // return a Error message describing the reason     
+        return { code: 400, message: e.message };
+    }
+
+}
+
+async function getOrdersPaid(order) {
+
+    // Creating a new Mongoose Object by using the new keyword
+    try {
+        // Find the User 
+
+        const result = await db.query(
+            `select count(*) as Cantidad from pedidos 
+            where IdFranquicia =${order.idFranquicia} and SnAprobado='S' and SnPago='S'`
+        );
+
+        const data = helper.emptyOrRows(result);
+
+        return { code: 201, orders: data };
+
+    } catch (e) {
+        // return a Error message describing the reason     
+        return { code: 400, message: e.message };
+    }
+
+}
+
+async function getOrdersNotPaid(order) {
+
+    // Creating a new Mongoose Object by using the new keyword
+    try {
+        // Find the User 
+
+        const result = await db.query(
+            `select count(*) as Cantidad from pedidos 
+            where IdFranquicia =${order.idFranquicia} and SnAprobado='S' and SnPago='N'`
         );
 
         const data = helper.emptyOrRows(result);
@@ -142,5 +209,8 @@ module.exports = {
     saveOrder,
     getOrders,
     getOrderById,
-    getOrderbyFranquicia
+    getOrderbyFranquicia,
+    getOrdersOnProgress,
+    getOrdersPaid,
+    getOrdersNotPaid
 }

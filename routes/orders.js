@@ -17,7 +17,7 @@ router.post('/createOrder', async function(req, res, next) {
   router.get('/getOrderById', async function(req, res, next) {
     try {
 
-      const result= await order.getOrderById(req.query)  
+      const result= await order.getOrderById(req.body)  
       
       res.status(result.code).json(result.orders);
 
@@ -30,7 +30,7 @@ router.post('/createOrder', async function(req, res, next) {
   router.get('/getOrderByFranquicia', async function(req, res, next) {
     try {
 
-      const result= await order.getOrderbyFranquicia(req.query)  
+      const result= await order.getOrderbyFranquicia(req.body)  
       
       res.status(result.code).json(result.orders);
 
@@ -49,6 +49,45 @@ router.post('/createOrder', async function(req, res, next) {
 
     } catch (err) {
       console.error(`Error obteniendo ordenes`, err.message);
+      next(err);
+    }
+  });
+
+  router.get('/getOrdersOnProgress', async function(req, res, next) {
+    try {
+
+      const result= await order.getOrdersOnProgress(req.body)  
+      
+      res.status(result.code).json(result.orders);
+
+    } catch (err) {
+      console.error(`Error obteniendo ordenes aprobadas o en progreso`, err.message);
+      next(err);
+    }
+  });
+
+  router.get('/getOrdersPaid', async function(req, res, next) {
+    try {
+
+      const result= await order.getOrdersPaid(req.body)  
+      
+      res.status(result.code).json(result.orders);
+
+    } catch (err) {
+      console.error(`Error obteniendo ordenes pagadas`, err.message);
+      next(err);
+    }
+  });
+
+  router.get('/getOrdersNotPaid', async function(req, res, next) {
+    try {
+
+      const result= await order.getOrdersNotPaid(req.body)  
+      
+      res.status(result.code).json(result.orders);
+
+    } catch (err) {
+      console.error(`Error obteniendo ordenes no pagadas`, err.message);
       next(err);
     }
   });

@@ -17,7 +17,7 @@ router.post('/createProduct', async function(req, res, next) {
   router.get('/getProductByCode', async function(req, res, next) {
     try {
 
-      const result= await products.getProductbyCode(req.query)  
+      const result= await products.getProductbyCode(req.body)  
       
       res.status(result.code).json(result.product);
 
@@ -30,7 +30,7 @@ router.post('/createProduct', async function(req, res, next) {
   router.get('/getProductByDescription', async function(req, res, next) {
     try {
 
-      const result= await products.getProductByDescription(req.query)  
+      const result= await products.getProductByDescription(req.body)  
       
       res.status(result.code).json(result.product);
 
@@ -52,6 +52,26 @@ router.post('/createProduct', async function(req, res, next) {
       next(err);
     }
   });
+
+  router.post('/updateProductByCode', async function(req, res, next) {
+    try {
+      res.json(await products.updateProductByCode(req.body));
+    } catch (err) {
+      console.error(`Error actualizando producto`, err.message);
+      next(err);
+    }
+  });
+
+  router.delete('/deleteProductByCode', async function(req, res, next) {
+    try {
+      res.json(await products.deleteProductByCode(req.body));
+    } catch (err) {
+      console.error(`Error eliminando producto`, err.message);
+      next(err);
+    }
+  });
+
+  
 
 
   module.exports = router;

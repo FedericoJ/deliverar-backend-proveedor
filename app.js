@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 const port = process.env.PORT ||  3000;
 const productsRouter = require('./routes/products');
+const ordersRouter = require('./routes/orders');
 
 var cors = require('cors');
 
@@ -32,6 +33,7 @@ app.use((err, req, res, next) => {
 
 
 app.use("/products",productsRouter);
+app.use("/orders",ordersRouter);
 
 
 app.listen(port, () => {
