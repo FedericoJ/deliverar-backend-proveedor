@@ -3,29 +3,23 @@ const helper = require('../helper');
 const config = require('../config');
 
 async function saveOrder(order) {
-
     var currentTime = new Date();
 
     try {
         const result = await db.query(
             `insert into pedidos (Usuario,Total,snAprobado,idFranquicia,Estado,FecAlta) 
             VALUES 
-            (${order.usuario}, ${order.total},'N', ${order.idFranquicia},'CREADO','${currentTime}')`
+            ('${order.usuario}', ${order.total},'N', ${order.idFranquicia},'CREADO',now())`
         );
 
-        let message = 'Error guardando los datos del pedido';
+        if (order.detail.length>0) {
 
-        if (result.affectedRows) {
-
-            var idPedidoAnterior =result.insertId;
-
-            order.products.forEach(async detail => {            
+            order.detail.forEach(async detail => {            
     
                 const result1 = await db.query(
                     `insert into detallepedido (idPedido, CodProducto, cantidad, FecAlta) 
                     VALUES 
-                    (${idPedidoAnterior}, '${detail.CodProducto}', '${detail.cantidad}',
-                    '${currentTime}')`
+                    (${result.insertId}, '${detail.CodProducto}', '${detail.cantidad}',now())`
                 );
     
                 if (!result1.affectedRows) {
@@ -34,9 +28,9 @@ async function saveOrder(order) {
     
             });
 
-            return { code: 201, message: message }
-
         }
+
+        let message = "Pedido creado correctamente";
 
         return { code: 201, message: message }
 
@@ -67,30 +61,6 @@ async function getOrders() {
         // return a Error message describing the reason     
         return { code: 400, message: e.message };
     }
-
-}
-
-
-async function updateEstadoPedido(order){
-
-    try {
-        // Find the User 
-
-        const result = await db.query(
-            `select IdPedido, Usuario, Total, SnAprobado, fecAlta, FecModificacion, IdFranquicia,SnPago from pedidos 
-            where IdPedido=${order.id}`
-        );
-
-        const data = helper.emptyOrRows(result);
-
-        return { code: 201, orders: data };
-
-    } catch (e) {
-        // return a Error message describing the reason     
-        return { code: 400, message: e.message };
-    }
-
-
 
 }
 
@@ -204,6 +174,32 @@ async function getOrdersNotPaid(order) {
 
 }
 
+async function approveOrder(order){
+
+    try {
+        // Find the User 
+
+        const result = await db.query(
+            `Update pedidos
+            set SnAprobado='S'
+            where IdPedido=${order.IdPedido}`
+        );
+
+        const data = helper.emptyOrRows(result);
+
+        if (data.affectedRows>0){
+            return { code: 201, message: "Actualizado correctamente" };
+        }else{
+            return { code: 400, message: "No Actualizado correctamente" };
+        }
+
+    } catch (e) {
+        // return a Error message describing the reason     
+        return { code: 400, message: e.message };
+    }
+
+}
+
 
 module.exports = {
     saveOrder,
@@ -212,5 +208,6 @@ module.exports = {
     getOrderbyFranquicia,
     getOrdersOnProgress,
     getOrdersPaid,
-    getOrdersNotPaid
+    getOrdersNotPaid,
+    approveOrder
 }

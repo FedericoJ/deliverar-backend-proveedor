@@ -92,5 +92,16 @@ router.post('/createOrder', async function(req, res, next) {
     }
   });
 
+  router.post('/approveOrder', async function(req, res, next) {
+    try {
+
+      res.json(await order.approveOrder(req.body));
+
+    } catch (err) {
+      console.error(`Error aprobando la orden`, err.message);
+      next(err);
+    }
+  });
+
 
   module.exports = router;

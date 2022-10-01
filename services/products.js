@@ -10,15 +10,10 @@ async function saveProducts(product) {
             `insert into productos ( CodProducto, Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,Usuario,CuitProveedor) 
             VALUES 
             ('${product.codProducto}', '${product.descripcion}', '${product.imagen}', ${product.stock}, 
-            ${product.precio} ,  ${product.medStock} , '${product.fecAlta}' , '${product.usuario}',${product.cuit} )`
+            ${product.precio} ,  ${product.medStock} , now() , '${product.usuario}',${product.cuit} )`
         );
-
-
-        let message = 'Error guardando los datos del producto';
-
-        if (result.affectedRows) {
-            message = 'Producto guardado correctamente';
-        }
+        
+        message = 'Producto guardado correctamente';
 
         return { code: 201, message: message }
 
