@@ -13,6 +13,16 @@ router.post('/createProduct', async function(req, res, next) {
     }
   });
 
+  router.post('/createMultipleProducts', async function(req, res, next) {
+    try {
+      res.json(await products.saveMultipleProducts(req.body));
+    } catch (err) {
+      console.error(`Error creando productos`, err.message);
+      next(err);
+    }
+  });
+
+
 
   router.get('/getProductByCode', async function(req, res, next) {
     try {

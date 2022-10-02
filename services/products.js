@@ -24,6 +24,40 @@ async function saveProducts(product) {
 
 }
 
+async function saveMultipleProducts(product) {
+    var currentTime = new Date();
+
+    try {
+       
+        if (product.products.length > 0) {
+
+            product.products.forEach(async detail => {            
+    
+                const result1 = await db.query(
+                    `insert into productos (CodProducto, Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,Usuario,CuitProveedor) 
+                    VALUES 
+                    ('${detail.codProducto}', '${detail.descripcion}', '${detail.imagen}', ${detail.stock}, 
+                    ${detail.precio} ,  ${detail.medStock} , now() , '${product.usuario}',${product.cuit} )`)
+    
+                if (!result1.affectedRows) {
+                    return { code: 400, message: "No se han podido guardar los productos requeridos" };
+                }
+    
+            });
+
+        }
+      
+        return { code: 201, message: "Productos ingresados correctamente" }
+
+    } catch (e) {
+
+        return { code: 400, message: e.message };
+    }
+
+}
+
+
+
 
 async function getProducts() {
 
@@ -148,5 +182,7 @@ module.exports = {
     getProductbyCode,
     getProductByDescription,
     updateProductByCode,
-    deleteProductByCode
+    deleteProductByCode,
+    saveMultipleProducts
+    
 }
