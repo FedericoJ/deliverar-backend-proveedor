@@ -59,14 +59,16 @@ async function saveMultipleProducts(product) {
 
 
 
-async function getProducts() {
+async function getProducts(product) {
 
     // Creating a new Mongoose Object by using the new keyword
     try {
         // Find the User 
 
         const result = await db.query(
-            `select CodProducto,Descripcion,Stock,Precio,FecAlta,FecModificacion,IdProovedor from productos `
+            `select p.CodProducto,Descripcion,Stock,Precio,of.porcentaje, of.fecDesde,of.fecHasta,FecAlta,FecModificacion,p.IdProveedor from productos p
+            left join ofertas of on of.codProducto=p.codProducto and p.IdProveedor=of.cuit
+            where IdProveedor=${product.cuit}`
         );
 
         const data = helper.emptyOrRows(result);
@@ -87,8 +89,8 @@ async function getProductbyCode(product) {
         // Find the User 
 
         const result = await db.query(
-            `select CodProducto,Descripcion,Stock,Precio,FecAlta,FecModificacion,IdProovedor from productos 
-            where UPPER(CodProducto)=UPPER('${product.codProducto}') and IdProovedor ='${product.cuit}'`
+            `select CodProducto,Descripcion,Stock,Precio,FecAlta,FecModificacion,IdProveedor from productos 
+            where UPPER(CodProducto)=UPPER('${product.codProducto}') and IdProveedor ='${product.cuit}'`
         );
 
         const data = helper.emptyOrRows(result);
@@ -109,8 +111,8 @@ async function getProductByDescription(product) {
         // Find the User 
 
         const result = await db.query(
-            `select CodProducto,Descripcion,Stock,Precio,FecAlta,FecModificacion,IdProovedor from productos 
-            where upper(Descripcion) LIKE upper('%${product.descripcion}%') and IdProovedor ='${product.IdProovedor}'`
+            `select CodProducto,Descripcion,Stock,Precio,FecAlta,FecModificacion,IdProveedor from productos 
+            where upper(Descripcion) LIKE upper('%${product.descripcion}%') and IdProveedor ='${product.IdProovedor}'`
         );
 
         const data = helper.emptyOrRows(result);
@@ -137,7 +139,7 @@ async function updateProductByCode(product) {
             Precio='${product.precio}',
             FecModificacion=now(),
             IdProovedor='${product.IdProovedor}'
-            where CodProducto = '${product.CodProducto}' and IdProovedor ='${product.IdProovedor}'`
+            where CodProducto = '${product.CodProducto}' and IdProveedor ='${product.IdProovedor}'`
         );
 
         const data = helper.emptyOrRows(result);
@@ -159,7 +161,7 @@ async function deleteProductByCode(product) {
 
         const result = await db.query(
             `delete from productos
-            where CodProducto = '${product.CodProducto}' and IdProovedor =${product.IdProovedor}`
+            where CodProducto = '${product.CodProducto}' and IdProveedor =${product.IdProovedor}`
         );
 
         const data = helper.emptyOrRows(result);

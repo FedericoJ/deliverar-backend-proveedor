@@ -53,7 +53,7 @@ router.post('/createProduct', async function(req, res, next) {
   router.get('/getProducts', async function(req, res, next) {
     try {
 
-      const result= await products.getProducts();  
+      const result= await products.getProducts(req.query);  
       
       res.status(result.code).json(result.products);
 
