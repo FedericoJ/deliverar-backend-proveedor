@@ -61,44 +61,20 @@ router.post('/createOrder', async function(req, res, next) {
       res.status(result.code).json(result.orders);
 
     } catch (err) {
-      console.error(`Error obteniendo ordenes aprobadas o en progreso`, err.message);
+      console.error(`Error obteniendo ordenes en progreso`, err.message);
       next(err);
     }
   });
 
-  router.get('/getOrdersPaid', async function(req, res, next) {
+  router.get('/getOrdersFinished', async function(req, res, next) {
     try {
 
-      const result= await order.getOrdersPaid(req.body)  
+      const result= await order.getOrdersFinished(req.body)  
       
       res.status(result.code).json(result.orders);
 
     } catch (err) {
-      console.error(`Error obteniendo ordenes pagadas`, err.message);
-      next(err);
-    }
-  });
-
-  router.get('/getOrdersNotPaid', async function(req, res, next) {
-    try {
-
-      const result= await order.getOrdersNotPaid(req.body)  
-      
-      res.status(result.code).json(result.orders);
-
-    } catch (err) {
-      console.error(`Error obteniendo ordenes no pagadas`, err.message);
-      next(err);
-    }
-  });
-
-  router.post('/approveOrder', async function(req, res, next) {
-    try {
-
-      res.json(await order.approveOrder(req.body));
-
-    } catch (err) {
-      console.error(`Error aprobando la orden`, err.message);
+      console.error(`Error obteniendo ordenes finalizadas`, err.message);
       next(err);
     }
   });
