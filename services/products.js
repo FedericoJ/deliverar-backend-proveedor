@@ -7,10 +7,10 @@ async function saveProducts(product) {
 
     try {
         const result = await db.query(
-            `insert into productos ( CodProducto, Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,Usuario,CuitProveedor) 
+            `insert into productos ( CodProducto, Descripcion,Stock,Precio,FecAlta, IdProovedor) 
             VALUES 
-            ('${product.codProducto}', '${product.descripcion}', '${product.imagen}', ${product.stock}, 
-            ${product.precio} ,  ${product.medStock} , now() , '${product.usuario}',${product.cuit} )`
+            ('${product.codProducto}', '${product.descripcion}', ${product.stock}, 
+            ${product.precio} , now(), '${product.IdProovedor}')`
         );
         
         message = 'Producto guardado correctamente';
@@ -66,7 +66,7 @@ async function getProducts() {
         // Find the User 
 
         const result = await db.query(
-            `select CodProducto,Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,FecModificacion,Usuario from productos `
+            `select CodProducto,Descripcion,Stock,Precio,FecAlta,FecModificacion,IdProovedor from productos `
         );
 
         const data = helper.emptyOrRows(result);
@@ -87,8 +87,8 @@ async function getProductbyCode(product) {
         // Find the User 
 
         const result = await db.query(
-            `select CodProducto,Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,FecModificacion,Usuario from productos 
-            where UPPER(CodProducto)=UPPER('${product.codProducto}') and CuitProveedor =${product.cuit}`
+            `select CodProducto,Descripcion,Stock,Precio,FecAlta,FecModificacion,IdProovedor from productos 
+            where UPPER(CodProducto)=UPPER('${product.codProducto}') and IdProovedor ='${product.cuit}'`
         );
 
         const data = helper.emptyOrRows(result);
@@ -109,8 +109,8 @@ async function getProductByDescription(product) {
         // Find the User 
 
         const result = await db.query(
-            `select CodProducto,Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,FecModificacion,Usuario from productos 
-            where Descripcion LIKE '%${product.descripcion}%' and CuitProveedor =${product.cuit}`
+            `select CodProducto,Descripcion,Stock,Precio,FecAlta,FecModificacion,IdProovedor from productos 
+            where upper(Descripcion) LIKE upper('%${product.descripcion}%') and IdProovedor ='${product.IdProovedor}'`
         );
 
         const data = helper.emptyOrRows(result);
@@ -133,13 +133,11 @@ async function updateProductByCode(product) {
         const result = await db.query(
             `update productos
             set Descripcion='${product.descripcion}',
-            Imagen='${product.imagen}',
             Stock='${product.stock}',
             Precio='${product.precio}',
-            MediaStock='${product.mediastock}',
             FecModificacion=now(),
-            Usuario='${product.usuario}'
-            where CodProducto = '${product.CodProducto}' and CuitProveedor =${product.cuit}`
+            IdProovedor='${product.IdProovedor}'
+            where CodProducto = '${product.CodProducto}' and IdProovedor ='${product.IdProovedor}'`
         );
 
         const data = helper.emptyOrRows(result);
@@ -161,7 +159,7 @@ async function deleteProductByCode(product) {
 
         const result = await db.query(
             `delete from productos
-            where CodProducto = '${product.CodProducto}' and CuitProveedor =${product.cuit}`
+            where CodProducto = '${product.CodProducto}' and IdProovedor =${product.IdProovedor}`
         );
 
         const data = helper.emptyOrRows(result);

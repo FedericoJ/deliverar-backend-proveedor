@@ -7,9 +7,9 @@ async function saveOrder(order) {
 
     try {
         const result = await db.query(
-            `insert into pedidos (Usuario,Total,snAprobado,idFranquicia,Estado,FecAlta) 
+            `insert into pedidos (FecAlta, IdFranquicia, SnFinalizado, DescripcionFranquicia, IdProovedor) 
             VALUES 
-            ('${order.usuario}', ${order.total},'N', ${order.idFranquicia},'CREADO',now())`
+            (now(), ${order.idFranquicia},'N', '${order.DescripcionFranquicia}','${order.IdProovedor}')`
         );
 
         if (order.detail.length>0) {
@@ -17,9 +17,9 @@ async function saveOrder(order) {
             order.detail.forEach(async detail => {            
     
                 const result1 = await db.query(
-                    `insert into detallepedido (idPedido, CodProducto, cantidad, FecAlta) 
+                    `insert into detallepedido (idPedido, CodProducto, Cantidad, PrecioUnitario, FecAlta, IdProovedor) 
                     VALUES 
-                    (${result.insertId}, '${detail.CodProducto}', '${detail.cantidad}',now())`
+                    (${result.insertId}, '${detail.CodProducto}', '${detail.cantidad}','${detail.PrecioUnitario}',now(),'${detail.IdProovedor}')`
                 );
     
                 if (!result1.affectedRows) {
@@ -49,7 +49,7 @@ async function getOrders() {
         // Find the User 
 
         const result = await db.query(
-            `select IdPedido, Usuario, Total, SnAprobado, fecAlta, FecModificacion, IdFranquicia,SnPago, Estado 
+            `select IdPedido, FecAlta, FecModificacion, IdFranquicia, SnFinalizado, DescripcionFranquicia, IdProovedor
             from pedidos`
         );
 
@@ -71,7 +71,7 @@ async function getOrderById(order) {
         // Find the User 
 
         const result = await db.query(
-            `select IdPedido, Usuario, Total, SnAprobado, fecAlta, FecModificacion, IdFranquicia,SnPago, Estado from pedidos 
+            `select IdPedido, FecAlta, FecModificacion, IdFranquicia, SnFinalizado, DescripcionFranquicia, IdProovedor from pedidos 
             where IdPedido=${order.id}`
         );
 
@@ -93,7 +93,7 @@ async function getOrderbyFranquicia(order) {
         // Find the User 
 
         const result = await db.query(
-            `select IdPedido, Usuario, Total, SnAprobado, fecAlta, FecModificacion, IdFranquicia,SnPago, Estado from pedidos 
+            `select IdPedido, FecAlta, FecModificacion, IdFranquicia, SnFinalizado, DescripcionFranquicia, IdProovedor from pedidos 
             where IdFranquicia =${order.idFranquicia}`
         );
 
