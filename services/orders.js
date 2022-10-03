@@ -116,7 +116,7 @@ async function getOrdersOnProgress(order) {
 
         const result = await db.query(
             `select count(*) as Cantidad from pedidos 
-            where IdFranquicia =${order.idFranquicia} and SnAprobado='S'`
+            where IdFranquicia =${order.idFranquicia} and SnFinalizado='N'`
         );
 
         const data = helper.emptyOrRows(result);
@@ -130,7 +130,7 @@ async function getOrdersOnProgress(order) {
 
 }
 
-async function getOrdersPaid(order) {
+async function getOrdersFinished(order) {
 
     // Creating a new Mongoose Object by using the new keyword
     try {
@@ -138,7 +138,7 @@ async function getOrdersPaid(order) {
 
         const result = await db.query(
             `select count(*) as Cantidad from pedidos 
-            where IdFranquicia =${order.idFranquicia} and SnAprobado='S' and SnPago='S'`
+            where IdFranquicia =${order.idFranquicia} and SnFinalizado='S'`
         );
 
         const data = helper.emptyOrRows(result);
@@ -151,55 +151,6 @@ async function getOrdersPaid(order) {
     }
 
 }
-
-async function getOrdersNotPaid(order) {
-
-    // Creating a new Mongoose Object by using the new keyword
-    try {
-        // Find the User 
-
-        const result = await db.query(
-            `select count(*) as Cantidad from pedidos 
-            where IdFranquicia =${order.idFranquicia} and SnAprobado='S' and SnPago='N'`
-        );
-
-        const data = helper.emptyOrRows(result);
-
-        return { code: 201, orders: data };
-
-    } catch (e) {
-        // return a Error message describing the reason     
-        return { code: 400, message: e.message };
-    }
-
-}
-
-async function approveOrder(order){
-
-    try {
-        // Find the User 
-
-        const result = await db.query(
-            `Update pedidos
-            set SnAprobado='S'
-            where IdPedido=${order.IdPedido}`
-        );
-
-        const data = helper.emptyOrRows(result);
-
-        if (data.affectedRows>0){
-            return { code: 201, message: "Actualizado correctamente" };
-        }else{
-            return { code: 400, message: "No Actualizado correctamente" };
-        }
-
-    } catch (e) {
-        // return a Error message describing the reason     
-        return { code: 400, message: e.message };
-    }
-
-}
-
 
 module.exports = {
     saveOrder,
@@ -207,7 +158,5 @@ module.exports = {
     getOrderById,
     getOrderbyFranquicia,
     getOrdersOnProgress,
-    getOrdersPaid,
-    getOrdersNotPaid,
-    approveOrder
+    getOrdersFinished
 }
