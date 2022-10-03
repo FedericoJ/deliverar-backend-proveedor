@@ -175,6 +175,80 @@ async function deleteProductByCode(product) {
 
 }
 
+//Modulo de Ofertas
+
+async function saveOffers(offer) {
+
+
+    try {
+        const result = await db.query(
+            `insert into ofertas ( CodProducto, cuit,porcentaje,fecDesde,fecHasta) 
+            VALUES 
+            ('${offer.codProducto}', ${offer.cuit}, ${offer.porcentaje}, '${offer.fecDesde}' , '${offer.fecHasta}')`
+        );
+        
+        message = 'Oferta guardada correctamente';
+
+        return { code: 201, message: message }
+
+    } catch (e) {
+
+        return { code: 400, message: e.message };
+    }
+
+}
+
+async function updateOfferByCode(offer) {
+
+    // Creating a new Mongoose Object by using the new keyword
+    try {
+        // Find the User 
+
+        const result = await db.query(
+            `update ofertas
+            set porcentaje='${offer.discount}',
+            fecDesde=now(),
+            fecHasta='${offer.fecHasta}'
+            where codProducto = '${offer.CodProducto}' and CuitProveedor =${offer.cuit}`
+        );
+
+        const data = helper.emptyOrRows(result);
+
+        return { code: 201, product: data };
+
+    } catch (e) {
+        // return a Error message describing the reason     
+        return { code: 400, message: e.message };
+    }
+
+}
+
+async function deleteOfferbyCode(offer) {
+
+    // Creating a new Mongoose Object by using the new keyword
+    try {
+        // Find the User 
+
+        const result = await db.query(
+            `delete from ofertas
+            where idOferta = ${offer.id}`
+        );
+
+        const data = helper.emptyOrRows(result);
+
+        return { code: 201, offer: data };
+
+    } catch (e) {
+        // return a Error message describing the reason     
+        return { code: 400, message: e.message };
+    }
+
+}
+
+
+
+
+
 
 module.exports = {
     saveProducts,
@@ -183,6 +257,9 @@ module.exports = {
     getProductByDescription,
     updateProductByCode,
     deleteProductByCode,
-    saveMultipleProducts
+    saveMultipleProducts,
+    saveOffers,
+    updateOfferByCode,
+    deleteOfferbyCode
     
 }

@@ -81,7 +81,36 @@ router.post('/createProduct', async function(req, res, next) {
     }
   });
 
-  
+  //Modulo de Ofertas
+
+router.post('/createOffer', async function(req, res, next) {
+    try {
+      res.json(await products.saveOffers(req.body));
+    } catch (err) {
+      console.error(`Error creando producto`, err.message);
+      next(err);
+    }
+  });
+
+  router.post('/updateOffer', async function(req, res, next) {
+    try {
+      res.json(await products.updateOfferByCode(req.body));
+    } catch (err) {
+      console.error(`Error creando producto`, err.message);
+      next(err);
+    }
+  });
+
+  router.post('/deleteOffer', async function(req, res, next) {
+    try {
+      res.json(await products.deleteOfferbyCode(req.body));
+    } catch (err) {
+      console.error(`Error creando producto`, err.message);
+      next(err);
+    }
+  });
+
+
 
 
   module.exports = router;
