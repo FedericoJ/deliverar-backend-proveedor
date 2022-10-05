@@ -175,8 +175,12 @@ async function getOrdersDetail(order) {
         // Find the User 
 
         const result = await db.query(
-            `select count(*) as Cantidad from pedidos 
-            where IdFranquicia =${order.idFranquicia} and SnFinalizado='S'`
+            `
+            select (select Descripcion from productos P where P.CodProducto=DP.CodProducto and P.IdProveedor=DP.IdProovedor) as Producto,
+            CodProducto as CodigoProducto,
+            Cantidad,
+            cast(PrecioUnitario as decimal(19,2)) as Importe
+            from detallepedido DP where idpedido=${order.idPedido}`
         );
 
         const data = helper.emptyOrRows(result);
