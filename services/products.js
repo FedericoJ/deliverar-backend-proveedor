@@ -66,8 +66,9 @@ async function getProducts(product) {
         // Find the User 
 
         const result = await db.query(
-            `select p.CodProducto,Descripcion,Stock,Precio,of.porcentaje, of.fecDesde,of.fecHasta,FecAlta,FecModificacion,p.IdProveedor from productos p
-            left join ofertas of on of.codProducto=p.codProducto and p.IdProveedor=of.cuit
+            `select CodProducto,Descripcion,Stock,
+            ifnull((select P.Precio*O.Porcentaje/100 from Ofertas O where O.CodProducto=P.CodProducto and O.cuit=P.IdProveedor and now()<O.fechasta and now()>O.fecdesde),Precio) as Precio,
+            FecAlta,FecModificacion,IdProveedor from productos P 
             where IdProveedor=${product.cuit}`
         );
 
@@ -113,7 +114,9 @@ async function getProductByDescription(product) {
         // Find the User 
 
         const result = await db.query(
-            `select CodProducto,Descripcion,Stock,Precio,FecAlta,FecModificacion,IdProveedor from productos 
+            `select CodProducto,Descripcion,Stock,
+            ifnull((select P.Precio*O.Porcentaje/100 from Ofertas O where O.CodProducto=P.CodProducto and O.cuit=P.IdProveedor and now()<O.fechasta and now()>O.fecdesde),Precio) as Precio,
+            FecAlta,FecModificacion,IdProveedor from productos P 
             where upper(Descripcion) LIKE upper('%${product.descripcion}%') and IdProveedor ='${product.IdProovedor}'`
         );
 
