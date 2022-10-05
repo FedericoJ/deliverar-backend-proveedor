@@ -43,7 +43,7 @@ router.post('/createOrder', async function(req, res, next) {
   router.get('/getDetailOrderByFranquicia', async function(req, res, next) {
     try {
 
-      const result= await order.getOrderbyFranquicia(req.query)  
+      const result= await order.getOrderDetailbyFranquicia(req.query)  
       
       res.status(result.code).json(result.orders);
 

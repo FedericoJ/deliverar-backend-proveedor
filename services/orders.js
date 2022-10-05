@@ -2,44 +2,7 @@ const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
 
-async function saveOrder(order) {
-    var currentTime = new Date();
 
-    try {
-        const result = await db.query(
-            `insert into pedidos (FecAlta, IdFranquicia, SnFinalizado, DescripcionFranquicia, IdProveedor) 
-            VALUES 
-            (now(), ${order.idFranquicia},'N', '${order.DescripcionFranquicia}','${order.IdProveedor}')`
-        );
-
-        if (order.detail.length>0) {
-
-            order.detail.forEach(async detail => {            
-    
-                const result1 = await db.query(
-                    `insert into detallepedido (idPedido, CodProducto, Cantidad, PrecioUnitario, FecAlta, IdProovedor) 
-                    VALUES 
-                    (${result.insertId}, '${detail.CodProducto}', '${detail.cantidad}','${detail.PrecioUnitario}',now(),'${detail.IdProveedor}')`
-                );
-    
-                if (!result1.affectedRows) {
-                    return { code: 400, message: "No se han podido guardar los ingredientes utilizados" };
-                }
-    
-            });
-
-        }
-
-        let message = "Pedido creado correctamente";
-
-        return { code: 201, message: message }
-
-    } catch (e) {
-
-        return { code: 400, message: e.message };
-    }
-
-}
 
 
 async function getOrders() {
@@ -77,40 +40,6 @@ async function getOrderById(order) {
             ifnull((select sum(preciounitario * cantidad) from detallepedido DP where DP.IdPedido=P.IdPedido),0) as Importe 
             from pedidos P
             where IdPedido=${order.id}`
-        );
-
-        const data = helper.emptyOrRows(result);
-
-        return { code: 201, orders: data };
-
-    } catch (e) {
-        // return a Error message describing the reason     
-        return { code: 400, message: e.message };
-    }
-
-}
-
-async function getOrderbyFranquicia(order) {
-
-    var query= `select P.IdPedido, P.FecAlta, P.FecModificacion, P.IdFranquicia, P.SnFinalizado, P.DescripcionFranquicia, P.IdProveedor, 
-        ifnull((select sum(preciounitario*cantidad) from detallepedido DP where DP.IdPedido=P.IdPedido),0) as Importe 
-        from pedidos P
-        WHERE IdFranquicia =${order.idFranquicia}`; 
-    // Creating a new Mongoose Object by using the new keyword
-    try {
-        // Find the User 
-
-        if (order.idpedido !== undefined){
-            query = query + ` AND IdPedido=${order.idpedido}`;
-        }
-
-        if (order.vigente !== undefined){
-            //Pedir que manden S o N
-            query = query + ` AND SnFinalizado=${order.vigente}`;
-        }
-
-        const result = await db.query(
-            query
         );
 
         const data = helper.emptyOrRows(result);
@@ -194,6 +123,119 @@ async function getOrdersDetail(order) {
 
 }
 
+//Para la Franquicia 
+
+async function saveOrder(order) {
+    var currentTime = new Date();
+
+    try {
+        const result = await db.query(
+            `insert into pedidos (FecAlta, IdFranquicia, SnFinalizado, DescripcionFranquicia, IdProveedor) 
+            VALUES 
+            (now(), ${order.idFranquicia},'N', '${order.DescripcionFranquicia}','${order.IdProveedor}')`
+        );
+
+        if (order.detail.length>0) {
+
+            order.detail.forEach(async detail => {            
+    
+                const result1 = await db.query(
+                    `insert into detallepedido (idPedido, CodProducto, Cantidad, PrecioUnitario, FecAlta, IdProovedor) 
+                    VALUES 
+                    (${result.insertId}, '${detail.CodProducto}', '${detail.cantidad}','${detail.PrecioUnitario}',now(),'${detail.IdProveedor}')`
+                );
+    
+                if (!result1.affectedRows) {
+                    return { code: 400, message: "No se han podido guardar los ingredientes utilizados" };
+                }
+    
+            });
+
+        }
+
+        let message = "Pedido creado correctamente";
+
+        return { code: 201, message: message }
+
+    } catch (e) {
+
+        return { code: 400, message: e.message };
+    }
+
+}
+
+async function getOrderbyFranquicia(order) {
+
+    var query= `select P.IdPedido, P.FecAlta, P.FecModificacion, P.IdFranquicia, P.SnFinalizado, P.DescripcionFranquicia, P.IdProveedor, 
+        ifnull((select sum(preciounitario*cantidad) from detallepedido DP where DP.IdPedido=P.IdPedido),0) as Importe 
+        from pedidos P
+        WHERE IdFranquicia =${order.idFranquicia}`; 
+    // Creating a new Mongoose Object by using the new keyword
+    try {
+        // Find the User 
+
+        if (order.idpedido !== undefined){
+            query = query + ` AND IdPedido=${order.idpedido}`;
+        }
+
+        if (order.vigente !== undefined){
+            //Pedir que manden S o N
+            query = query + ` AND SnFinalizado=${order.vigente}`;
+        }
+
+        const result = await db.query(
+            query
+        );
+
+        const data = helper.emptyOrRows(result);
+
+        return { code: 201, orders: data };
+
+    } catch (e) {
+        // return a Error message describing the reason     
+        return { code: 400, message: e.message };
+    }
+
+}
+
+
+async function getOrderDetailbyFranquicia(order) {
+
+    var query= `select P.IdPedido,P.CodProducto,pr.Descripcion,P.Cantidad,P.PrecioUnitario, P.FecAlta,P.IdProveedor
+    from detallepedido P
+    inner join productos pr on pr.CodProducto =P.CodProducto and P.IdProveedor = pr.IdProveedor
+    inner join pedidos ped on ped.IdPedido=P.IdPedido 
+    WHERE ped.IdFranquicia =${order.idFranquicia}`; 
+    // Creating a new Mongoose Object by using the new keyword
+    try {
+        // Find the User 
+
+        if (order.idpedido !== undefined){
+            query = query + ` AND P.IdPedido=${order.idpedido}`;
+        }
+
+        if (order.vigente !== undefined){
+            //Pedir que manden S o N
+            query = query + ` AND P.SnFinalizado=${order.vigente}`;
+        }
+
+        const result = await db.query(
+            query
+        );
+
+        const data = helper.emptyOrRows(result);
+
+        return { code: 201, orders: data };
+
+    } catch (e) {
+        // return a Error message describing the reason     
+        return { code: 400, message: e.message };
+    }
+
+}
+
+
+
 module.exports = {
     saveOrder,
     getOrders,
@@ -201,5 +243,6 @@ module.exports = {
     getOrderbyFranquicia,
     getOrdersOnProgress,
     getOrdersFinished,
-    getOrdersDetail
+    getOrdersDetail,
+    getOrderDetailbyFranquicia
 }
