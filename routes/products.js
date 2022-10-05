@@ -87,7 +87,7 @@ router.post('/createOffer', async function(req, res, next) {
     try {
       res.json(await products.saveOffers(req.body));
     } catch (err) {
-      console.error(`Error creando producto`, err.message);
+      console.error(`Error creando oferta`, err.message);
       next(err);
     }
   });
