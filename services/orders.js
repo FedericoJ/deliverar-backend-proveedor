@@ -7,9 +7,9 @@ async function saveOrder(order) {
 
     try {
         const result = await db.query(
-            `insert into pedidos (FecAlta, IdFranquicia, SnFinalizado, DescripcionFranquicia, IdProovedor) 
+            `insert into pedidos (FecAlta, IdFranquicia, SnFinalizado, DescripcionFranquicia, IdProveedor) 
             VALUES 
-            (now(), ${order.idFranquicia},'N', '${order.DescripcionFranquicia}','${order.IdProovedor}')`
+            (now(), ${order.idFranquicia},'N', '${order.DescripcionFranquicia}','${order.IdProveedor}')`
         );
 
         if (order.detail.length>0) {
@@ -19,7 +19,7 @@ async function saveOrder(order) {
                 const result1 = await db.query(
                     `insert into detallepedido (idPedido, CodProducto, Cantidad, PrecioUnitario, FecAlta, IdProovedor) 
                     VALUES 
-                    (${result.insertId}, '${detail.CodProducto}', '${detail.cantidad}','${detail.PrecioUnitario}',now(),'${detail.IdProovedor}')`
+                    (${result.insertId}, '${detail.CodProducto}', '${detail.cantidad}','${detail.PrecioUnitario}',now(),'${detail.IdProveedor}')`
                 );
     
                 if (!result1.affectedRows) {
@@ -73,7 +73,9 @@ async function getOrderById(order) {
         // Find the User 
 
         const result = await db.query(
-            `select IdPedido, FecAlta, FecModificacion, IdFranquicia, SnFinalizado, DescripcionFranquicia, IdProovedor from pedidos 
+            `select P.IdPedido, P.FecAlta, P.FecModificacion, P.IdFranquicia, P.SnFinalizado, P.DescripcionFranquicia, IdProveedor,
+            ifnull((select sum(preciounitario * cantidad) from detallepedido DP where DP.IdPedido=P.IdPedido),0) as Importe 
+            from pedidos P
             where IdPedido=${order.id}`
         );
 
@@ -90,13 +92,25 @@ async function getOrderById(order) {
 
 async function getOrderbyFranquicia(order) {
 
+    var query= `select P.IdPedido, P.FecAlta, P.FecModificacion, P.IdFranquicia, P.SnFinalizado, P.DescripcionFranquicia, P.IdProveedor, 
+        ifnull((select sum(preciounitario*cantidad) from detallepedido DP where DP.IdPedido=P.IdPedido),0) as Importe 
+        from pedidos P
+        WHERE IdFranquicia =${order.idFranquicia}`; 
     // Creating a new Mongoose Object by using the new keyword
     try {
         // Find the User 
 
+        if (order.idpedido !== undefined){
+            query = query + ` AND IdPedido=${order.idpedido}`;
+        }
+
+        if (order.vigente !== undefined){
+            //Pedir que manden S o N
+            query = query + ` AND SnFinalizado=${order.vigente}`;
+        }
+
         const result = await db.query(
-            `select IdPedido, FecAlta, FecModificacion, IdFranquicia, SnFinalizado, DescripcionFranquicia, IdProovedor from pedidos 
-            where IdFranquicia =${order.idFranquicia}`
+            query
         );
 
         const data = helper.emptyOrRows(result);

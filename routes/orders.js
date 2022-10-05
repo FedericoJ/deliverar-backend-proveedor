@@ -30,7 +30,20 @@ router.post('/createOrder', async function(req, res, next) {
   router.get('/getOrderByFranquicia', async function(req, res, next) {
     try {
 
-      const result= await order.getOrderbyFranquicia(req.body)  
+      const result= await order.getOrderbyFranquicia(req.query)  
+      
+      res.status(result.code).json(result.orders);
+
+    } catch (err) {
+      console.error(`Error obteniendo orden por franquicia`, err.message);
+      next(err);
+    }
+  });
+
+  router.get('/getDetailOrderByFranquicia', async function(req, res, next) {
+    try {
+
+      const result= await order.getOrderbyFranquicia(req.query)  
       
       res.status(result.code).json(result.orders);
 
