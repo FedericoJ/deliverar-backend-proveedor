@@ -216,7 +216,7 @@ async function getOrderDetailbyFranquicia(order) {
 
         if (order.vigente !== undefined){
             //Pedir que manden S o N
-            query = query + ` AND P.SnFinalizado=${order.vigente}`;
+            query = query + ` AND ped.SnFinalizado=${order.vigente}`;
         }
 
         const result = await db.query(
