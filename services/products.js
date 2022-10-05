@@ -89,7 +89,9 @@ async function getProductbyCode(product) {
         // Find the User 
 
         const result = await db.query(
-            `select CodProducto,Descripcion,Stock,Precio,FecAlta,FecModificacion,IdProveedor from productos 
+            `select CodProducto,Descripcion,Stock,
+            ifnull((select P.Precio*O.Porcentaje/100 from Ofertas O where O.CodProducto=P.CodProducto and O.cuit=P.IdProveedor and now()<O.fechasta and now()>O.fecdesde),Precio) as Precio,
+            FecAlta,FecModificacion,IdProveedor from productos P 
             where UPPER(CodProducto)=UPPER('${product.codProducto}') and IdProveedor ='${product.cuit}'`
         );
 
