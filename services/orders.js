@@ -154,11 +154,34 @@ async function getOrdersFinished(order) {
 
 }
 
+async function getOrdersDetail(order) {
+
+    // Creating a new Mongoose Object by using the new keyword
+    try {
+        // Find the User 
+
+        const result = await db.query(
+            `select count(*) as Cantidad from pedidos 
+            where IdFranquicia =${order.idFranquicia} and SnFinalizado='S'`
+        );
+
+        const data = helper.emptyOrRows(result);
+
+        return { code: 201, orders: data };
+
+    } catch (e) {
+        // return a Error message describing the reason     
+        return { code: 400, message: e.message };
+    }
+
+}
+
 module.exports = {
     saveOrder,
     getOrders,
     getOrderById,
     getOrderbyFranquicia,
     getOrdersOnProgress,
-    getOrdersFinished
+    getOrdersFinished,
+    getOrdersDetail
 }

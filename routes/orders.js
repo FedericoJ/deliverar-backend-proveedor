@@ -79,5 +79,18 @@ router.post('/createOrder', async function(req, res, next) {
     }
   });
 
+  router.get('/getOrdersDetail', async function(req, res, next) {
+    try {
+
+      const result= await order.getOrdersDetail(req.body)  
+      
+      res.status(result.code).json(result.orders);
+
+    } catch (err) {
+      console.error(`Error obteniendo el detalle`, err.message);
+      next(err);
+    }
+  });
+
 
   module.exports = router;
