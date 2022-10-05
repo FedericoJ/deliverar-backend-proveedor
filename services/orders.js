@@ -49,8 +49,10 @@ async function getOrders() {
         // Find the User 
 
         const result = await db.query(
-            `select IdPedido, FecAlta, FecModificacion, IdFranquicia, SnFinalizado, DescripcionFranquicia, IdProovedor
-            from pedidos`
+            `select IdPedido, IdFranquicia, DescripcionFranquicia, 
+            ifnull((select sum(preciounitario*cantidad) from detallepedido DP where DP.IdPedido=P.IdPedido),0) as Importe, 
+            right(cast(FecAlta as DATE),10) as FecAlta, SnFinalizado
+            from pedidos P`
         );
 
         const data = helper.emptyOrRows(result);
