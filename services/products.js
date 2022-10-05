@@ -66,9 +66,15 @@ async function getProducts(product) {
         // Find the User 
 
         const result = await db.query(
-            `select CodProducto,Descripcion,Stock,
-            ifnull((select P.Precio*O.Porcentaje/100 from Ofertas O where O.CodProducto=P.CodProducto and O.cuit=P.IdProveedor and now()<O.fechasta and now()>O.fecdesde),Precio) as Precio,
-            FecAlta,FecModificacion,IdProveedor from productos P 
+            `select Descripcion,CodProducto,Stock,
+            P.precio, 
+            cast(ifnull((select porcentaje from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit),0) as decimal(5,2)) as porcentaje,
+            ifnull((select right(cast(fecHasta as date),10) from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit),'') as FechaVigencia,
+            ifnull(case when (select 1 from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit and now()>O.fecDesde and now()<O.fechasta) then
+                'Activa'
+                end,'No Activa') as EstadoOferta,
+            right(cast(FecAlta as date),10) as FecAlta
+            from productos P 
             where IdProveedor=${product.cuit}`
         );
 
