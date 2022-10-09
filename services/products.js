@@ -149,8 +149,8 @@ async function updateProductByCode(product) {
             Stock='${product.stock}',
             Precio='${product.precio}',
             FecModificacion=now(),
-            IdProovedor='${product.IdProovedor}'
-            where CodProducto = '${product.CodProducto}' and IdProveedor ='${product.IdProovedor}'`
+            IdProveedor='${product.cuit}'
+            where CodProducto = '${product.codProducto}' and IdProveedor ='${product.cuit}'`
         );
 
         const data = helper.emptyOrRows(result);
@@ -195,7 +195,7 @@ async function saveOffers(offer) {
         const result = await db.query(
             `insert into ofertas ( CodProducto, cuit,porcentaje,fecDesde,fecHasta) 
             VALUES 
-            ('${offer.codProducto}', ${offer.cuit}, ${offer.porcentaje}, '${offer.fecDesde}' , '${offer.fecHasta}')`
+            ('${offer.codProducto}', ${offer.cuit}, ${offer.porcentaje}, now() , '${offer.fecHasta}')`
         );
         
         message = 'Oferta guardada correctamente';
