@@ -7,10 +7,10 @@ async function saveProducts(product) {
 
     try {
         const result = await db.query(
-            `insert into productos ( CodProducto, Descripcion,Stock,Precio,FecAlta, IdProovedor) 
+            `insert into productos ( CodProducto, Descripcion,Stock,Precio,FecAlta, IdProveedor) 
             VALUES 
             ('${product.codProducto}', '${product.descripcion}', ${product.stock}, 
-            ${product.precio} , now(), '${product.IdProovedor}')`
+            ${product.precio} , now(), '${product.cuit}')`
         );
         
         message = 'Producto guardado correctamente';
