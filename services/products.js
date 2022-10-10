@@ -232,7 +232,15 @@ async function updateOfferByCode(offer) {
                 fecHasta='${offer.fecHasta}'
                 where codProducto = '${offer.CodProducto}' and Cuit =${offer.cuit}`);
             if (!result1.affectedRows) {
-                return { code: 400, message: "No se han podido guardar la oferta requerida" };
+                return { code: 400, message: "No se ha podido guardar la oferta requerida" };
+            }
+        }else{
+            const result2 = await db.query(
+                `insert into ofertas ( CodProducto, cuit,porcentaje,fecDesde,fecHasta) 
+                VALUES 
+                ('${offer.CodProducto}', ${offer.cuit}, ${offer.discount}, now() , '${offer.fecHasta}')`);
+            if (!result2.affectedRows) {
+                return { code: 400, message: "No se ha podido guardar la oferta requerida" };
             }
         }
 
