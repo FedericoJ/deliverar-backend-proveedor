@@ -216,12 +216,25 @@ async function updateOfferByCode(offer) {
         // Find the User 
 
         const result = await db.query(
-            `update ofertas
-            set porcentaje='${offer.discount}',
-            fecDesde=now(),
-            fecHasta='${offer.fecHasta}'
-            where codProducto = '${offer.CodProducto}' and CuitProveedor =${offer.cuit}`
+            `Select (select Descripcion from productos P where P.CodProducto=O.CodProducto and O.cuit=P.IdProveedor) as NombreProducto,
+            CodProducto,
+            Porcentaje as Descuento,
+            fecHasta as FecVigenciaOferta
+            from Ofertas O
+            where CodProducto='${offer.CodProducto}'
+            and cuit='${offer.cuit}'`
         );
+        if(result.length>0){
+            const result1 = await db.query(
+                `update ofertas
+                set porcentaje='${offer.discount}',
+                fecDesde=now(),
+                fecHasta='${offer.fecHasta}'
+                where codProducto = '${offer.CodProducto}' and Cuit =${offer.cuit}`);
+            if (!result1.affectedRows) {
+                return { code: 400, message: "No se han podido guardar la oferta requerida" };
+            }
+        }
 
         const data = helper.emptyOrRows(result);
 
