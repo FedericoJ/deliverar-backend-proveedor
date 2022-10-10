@@ -75,7 +75,7 @@ async function getProducts(product) {
                 end,'No Activa') as EstadoOferta,
             concat(concat(concat(concat(day(FecAlta),'/'),month(FecAlta)),'/'),year(FecAlta)) as FecAlta
             from productos P 
-            where IdProveedor=${product.cuit}`
+            where IdProveedor='${product.cuit}'`
         );
 
         const data = helper.emptyOrRows(result);
@@ -256,6 +256,33 @@ async function deleteOfferbyCode(offer) {
 
 }
 
+async function getOffer(product) {
+
+    // Creating a new Mongoose Object by using the new keyword
+    try {
+        // Find the User 
+
+        const result = await db.query(
+            `Select (select Descripcion from productos P where P.CodProducto=O.CodProducto and O.cuit=P.IdProveedor) as NombreProducto,
+            CodProducto,
+            Porcentaje as Descuento,
+            fecHasta as FecVigenciaOferta
+            from Ofertas O
+            where CodProducto='${product.CodProducto}'
+            and cuit='${product.cuit}'`
+        );
+
+        const data = helper.emptyOrRows(result);
+
+        return { code: 201, products: data };
+
+    } catch (e) {
+        // return a Error message describing the reason     
+        return { code: 400, message: e.message };
+    }
+
+}
+
 
 
 
@@ -271,6 +298,7 @@ module.exports = {
     saveMultipleProducts,
     saveOffers,
     updateOfferByCode,
-    deleteOfferbyCode
+    deleteOfferbyCode,
+    getOffer
     
 }

@@ -110,6 +110,19 @@ router.post('/createOffer', async function(req, res, next) {
     }
   });
 
+  router.get('/getOffer', async function(req, res, next) {
+    try {
+
+      const result= await products.getOffer(req.query);  
+      
+      res.status(result.code).json(result.products);
+
+    } catch (err) {
+      console.error(`Error obteniendo ofertas`, err.message);
+      next(err);
+    }
+  });
+
 
 
 
