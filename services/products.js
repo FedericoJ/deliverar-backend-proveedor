@@ -69,11 +69,11 @@ async function getProducts(product) {
             `select Descripcion,CodProducto,Stock,
             P.precio, 
             cast(ifnull((select porcentaje from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit),0) as decimal(5,2)) as porcentaje,
-            ifnull((select right(cast(fecHasta as date),10) from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit),'') as FechaVigencia,
+            ifnull(concat(concat(concat(concat(day((select right(cast(fecHasta as date),10) from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit)),'/'),month((select right(cast(fecHasta as date),10) from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit))),'/'),year((select right(cast(fecHasta as date),10) from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit))),'') as FechaVigencia,
             ifnull(case when (select 1 from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit and now()>O.fecDesde and now()<O.fechasta) then
                 'Activa'
                 end,'No Activa') as EstadoOferta,
-            right(cast(FecAlta as date),10) as FecAlta
+            concat(concat(concat(concat(day(FecAlta),'/'),month(FecAlta)),'/'),year(FecAlta)) as FecAlta
             from productos P 
             where IdProveedor=${product.cuit}`
         );
