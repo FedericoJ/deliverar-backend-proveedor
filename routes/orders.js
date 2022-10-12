@@ -69,7 +69,7 @@ router.post('/createOrder', async function(req, res, next) {
   router.get('/getOrdersOnProgress', async function(req, res, next) {
     try {
 
-      const result= await order.getOrdersOnProgress(req.body)  
+      const result= await order.getOrdersOnProgress(req.query)  
       
       res.status(result.code).json(result.orders);
 

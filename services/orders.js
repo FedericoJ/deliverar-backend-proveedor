@@ -61,7 +61,7 @@ async function getOrdersOnProgress(order) {
 
         const result = await db.query(
             `select count(*) as Cantidad from pedidos 
-            where IdFranquicia =${order.idFranquicia} and SnFinalizado='N'`
+            where IdProveedor =${order.idFranquicia} and SnFinalizado='N'`
         );
 
         const data = helper.emptyOrRows(result);
