@@ -5,7 +5,7 @@ const config = require('../config');
 
 
 
-async function getOrders() {
+async function getOrders(order) {
 
     // Creating a new Mongoose Object by using the new keyword
     try {
@@ -15,7 +15,8 @@ async function getOrders() {
             `select IdPedido, IdFranquicia, DescripcionFranquicia, 
             ifnull((select sum(preciounitario*cantidad) from detallepedido DP where DP.IdPedido=P.IdPedido),0) as Importe, 
             right(cast(FecAlta as DATE),10) as FecAlta, SnFinalizado
-            from pedidos P`
+            from pedidos P
+            where IdProveedor =${order.cuit}`
         );
 
         const data = helper.emptyOrRows(result);
