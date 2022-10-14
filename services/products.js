@@ -172,7 +172,7 @@ async function deleteProductByCode(product) {
 
         const result = await db.query(
             `delete from productos
-            where CodProducto = '${product.CodProducto}' and IdProveedor =${product.IdProovedor}`
+            where CodProducto = '${product.codProducto}' and IdProveedor =${product.cuit}`
         );
 
         const data = helper.emptyOrRows(result);

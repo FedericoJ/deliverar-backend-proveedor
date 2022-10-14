@@ -72,7 +72,7 @@ router.post('/createProduct', async function(req, res, next) {
     }
   });
 
-  router.delete('/deleteProductByCode', async function(req, res, next) {
+  router.post('/deleteProductByCode', async function(req, res, next) {
     try {
       res.json(await products.deleteProductByCode(req.body));
     } catch (err) {

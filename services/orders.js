@@ -61,7 +61,7 @@ async function getOrdersOnProgress(order) {
 
         const result = await db.query(
             `select count(*) as Cantidad from pedidos 
-            where IdProveedor =${order.idFranquicia} and SnFinalizado='N'`
+            where IdProveedor =${order.cuit} and SnFinalizado='N'`
         );
 
         const data = helper.emptyOrRows(result);
@@ -83,7 +83,7 @@ async function getOrdersFinished(order) {
 
         const result = await db.query(
             `select count(*) as Cantidad from pedidos 
-            where IdFranquicia =${order.idFranquicia} and SnFinalizado='S'`
+            where IdProveedor =${order.cuit} and SnFinalizado='S'`
         );
 
         const data = helper.emptyOrRows(result);

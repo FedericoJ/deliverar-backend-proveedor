@@ -82,7 +82,7 @@ router.post('/createOrder', async function(req, res, next) {
   router.get('/getOrdersFinished', async function(req, res, next) {
     try {
 
-      const result= await order.getOrdersFinished(req.body)  
+      const result= await order.getOrdersFinished(req.query)  
       
       res.status(result.code).json(result.orders);
 
