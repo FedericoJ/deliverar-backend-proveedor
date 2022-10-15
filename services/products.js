@@ -171,12 +171,19 @@ async function deleteProductByCode(product) {
         // Find the User 
 
         const result = await db.query(
-            `delete from productos
-            where CodProducto = '${product.codProducto}' and IdProveedor =${product.cuit}`
+            `delete from ofertas
+            where codProducto = '${product.codProducto}' and cuit =${product.cuit}`
         );
 
-        const data = helper.emptyOrRows(result);
-
+        
+        const result1 = await db.query(
+                `delete from productos
+                where CodProducto = '${product.codProducto}' and IdProveedor =${product.cuit}`
+            );
+            if (!result1.affectedRows) {
+                return { code: 400, message: "No se ha podido eliminar el producto" };
+            }
+        
         return { code: 201, product: data };
 
     } catch (e) {
