@@ -165,6 +165,26 @@ async function saveOrder(order) {
 
 }
 
+async function updateOrderStatus(order) {
+
+    try {
+        const result = await db.query(
+            `update pedidos
+            set SnFinalizado='S'
+            where IdPedido=${order.idPedido}`
+        );
+
+        let message = "Pedido finalizado correctamente";
+
+        return { code: 201, message: message }
+
+    } catch (e) {
+
+        return { code: 400, message: e.message };
+    }
+
+}
+
 async function getOrderbyFranquicia(order) {
 
     var query= `select P.IdPedido, P.FecAlta, P.FecModificacion, P.IdFranquicia, P.SnFinalizado, P.DescripcionFranquicia, P.IdProveedor, 
@@ -245,5 +265,6 @@ module.exports = {
     getOrdersOnProgress,
     getOrdersFinished,
     getOrdersDetail,
-    getOrderDetailbyFranquicia
+    getOrderDetailbyFranquicia,
+    updateOrderStatus
 }
