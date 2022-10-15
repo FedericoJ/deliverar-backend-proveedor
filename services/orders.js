@@ -168,11 +168,23 @@ async function saveOrder(order) {
 async function updateOrderStatus(order) {
 
     try {
-        const result = await db.query(
-            `update pedidos
-            set SnFinalizado='S'
-            where IdPedido=${order.idPedido}`
-        );
+
+        if (order.detail.length>0) {
+
+            order.detail.forEach(async detail => {      
+    
+                const result1 = await db.query(
+                    `update pedidos
+                    set SnFinalizado='S'
+                    where IdPedido=${detail.idPedido}`
+                );
+    
+                if (!result1.affectedRows) {
+                    return { code: 400, message: "No se han podido finalizar los pedidos" };
+                }
+    
+            });
+        }
 
         let message = "Pedido finalizado correctamente";
 
