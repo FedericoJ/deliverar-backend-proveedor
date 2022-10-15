@@ -14,6 +14,15 @@ router.post('/createOrder', async function(req, res, next) {
   });
 
 
+  router.post('/updateOrderStatus', async function(req, res, next) {
+    try {
+      res.json(await order.updateOrderStatus(req.body));
+    } catch (err) {
+      console.error(`Error finalizando la orden`, err.message);
+      next(err);
+    }
+  });  
+
   router.get('/getOrderById', async function(req, res, next) {
     try {
 
