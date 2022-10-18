@@ -34,7 +34,7 @@ async function saveMultipleProducts(product) {
             product.products.forEach(async detail => {            
     
                 const result1 = await db.query(
-                    `insert into productos (CodProducto, Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,Usuario,CuitProveedor) 
+                    `insert into productos (CodProducto, Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,Usuario,IdProveedor) 
                     VALUES 
                     ('${detail.codProducto}', '${detail.descripcion}', '${detail.imagen}', ${detail.stock}, 
                     ${detail.precio} ,  ${detail.medStock} , now() , '${product.usuario}',${product.cuit} )`)
