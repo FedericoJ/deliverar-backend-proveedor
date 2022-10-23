@@ -106,7 +106,7 @@ async function getOrdersDetail(order) {
 
         const result = await db.query(
             `
-            select (select Descripcion from productos P where P.CodProducto=DP.CodProducto and P.IdProveedor=DP.IdProovedor) as Producto,
+            select (select Descripcion from productos P where P.CodProducto=DP.CodProducto and P.IdProveedor=DP.IdProveedor) as Producto,
             CodProducto as CodigoProducto,
             Cantidad,
             cast(PrecioUnitario as decimal(19,2)) as Importe
