@@ -106,7 +106,7 @@ async function getOrdersDetail(order) {
 
         const result = await db.query(
             `
-            select (select Descripcion from productos P where P.CodProducto=DP.CodProducto and P.IdProveedor=DP.IdProovedor) as Producto,
+            select (select Descripcion from productos P where P.CodProducto=DP.CodProducto and P.IdProveedor=DP.IdProveedor) as Descripcion,
             CodProducto as CodigoProducto,
             Cantidad,
             cast(PrecioUnitario as decimal(19,2)) as Importe
@@ -133,7 +133,7 @@ async function saveOrder(order) {
         const result = await db.query(
             `insert into pedidos (FecAlta, IdFranquicia, SnFinalizado, DescripcionFranquicia, IdProveedor) 
             VALUES 
-            (now(), ${order.idFranquicia},'N', '${order.DescripcionFranquicia}','${order.IdProveedor}')`
+            (now(), ${order.idFranquicia},'N', '${order.DescripcionFranquicia}','${order.IdProovedor}')`
         );
 
         if (order.detail.length>0) {
@@ -141,9 +141,9 @@ async function saveOrder(order) {
             order.detail.forEach(async detail => {            
     
                 const result1 = await db.query(
-                    `insert into detallepedido (idPedido, CodProducto, Cantidad, PrecioUnitario, FecAlta, IdProovedor) 
+                    `insert into detallepedido (idPedido, CodProducto, Cantidad, PrecioUnitario, FecAlta, IdProveedor) 
                     VALUES 
-                    (${result.insertId}, '${detail.CodProducto}', '${detail.cantidad}','${detail.PrecioUnitario}',now(),'${detail.IdProveedor}')`
+                    (${result.insertId}, '${detail.CodProducto}', '${detail.cantidad}',(select Precio from productos P where P.CodProducto='${detail.CodProducto}' and P.IdProveedor='${order.IdProovedor}'),now(),'${order.IdProovedor}')`
                 );
     
                 if (!result1.affectedRows) {

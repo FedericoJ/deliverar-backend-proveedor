@@ -63,6 +63,19 @@ router.post('/createProduct', async function(req, res, next) {
     }
   });
 
+  router.get('/getAllProducts', async function(req, res, next) {
+    try {
+
+      const result= await products.getAllProducts();  
+      
+      res.status(result.code).json(result.products);
+
+    } catch (err) {
+      console.error(`Error obteniendo productos`, err.message);
+      next(err);
+    }
+  });
+
   router.post('/updateProductByCode', async function(req, res, next) {
     try {
       res.json(await products.updateProductByCode(req.body));
