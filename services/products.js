@@ -64,19 +64,24 @@ async function getProducts(product) {
     // Creating a new Mongoose Object by using the new keyword
     try {
         // Find the User 
+        var query = `select Descripcion,CodProducto,Stock,
+        P.precio, 
+        cast(ifnull((select porcentaje from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit),0) as decimal(5,2)) as porcentaje,
+        ifnull(concat(concat(concat(concat(day((select right(cast(fecHasta as date),10) from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit)),'/'),month((select right(cast(fecHasta as date),10) from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit))),'/'),year((select right(cast(fecHasta as date),10) from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit))),'') as FechaVigencia,
+        ifnull(case when (select 1 from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit and now()>O.fecDesde and now()<O.fechasta) then
+            'Activa'
+            end,'No Activa') as EstadoOferta,
+        concat(concat(concat(concat(day(FecAlta),'/'),month(FecAlta)),'/'),year(FecAlta)) as FecAlta
+        from productos P 
+        where 1 = 1`
 
-        const result = await db.query(
-            `select Descripcion,CodProducto,Stock,
-            P.precio, 
-            cast(ifnull((select porcentaje from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit),0) as decimal(5,2)) as porcentaje,
-            ifnull(concat(concat(concat(concat(day((select right(cast(fecHasta as date),10) from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit)),'/'),month((select right(cast(fecHasta as date),10) from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit))),'/'),year((select right(cast(fecHasta as date),10) from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit))),'') as FechaVigencia,
-            ifnull(case when (select 1 from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit and now()>O.fecDesde and now()<O.fechasta) then
-                'Activa'
-                end,'No Activa') as EstadoOferta,
-            concat(concat(concat(concat(day(FecAlta),'/'),month(FecAlta)),'/'),year(FecAlta)) as FecAlta
-            from productos P 
-            where IdProveedor='${product.cuit}'`
-        );
+        if (product.cuit !==undefined){
+            query =query + ` AND IdProveedor='${product.cuit}'`
+        }
+
+        const result = await db.query(query);
+
+
 
         const data = helper.emptyOrRows(result);
 
