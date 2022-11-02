@@ -1,5 +1,6 @@
 var express = require("express");
 var app = express();
+var socket = require('./services/webSocket');
 const port = process.env.PORT ||  5001;
 const productsRouter = require('./routes/products');
 const ordersRouter = require('./routes/orders');
@@ -39,3 +40,7 @@ app.use("/orders",ordersRouter);
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+
+
+socket.connect();
+socket.processMessage();

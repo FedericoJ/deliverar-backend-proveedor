@@ -128,6 +128,7 @@ async function getOrdersDetail(order) {
 
 async function saveOrder(order) {
     var currentTime = new Date();
+    console.log("pase por aca");
 
     try {
         const result = await db.query(
