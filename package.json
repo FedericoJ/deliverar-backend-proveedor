@@ -4,7 +4,7 @@
   "description": "Backend-proyect",
   "main": "app.js",
   "scripts": {
-    "test":"jasmine",
+    "test": "jasmine",
     "start": "nodemon app.js"
   },
   "author": "Christian",
@@ -20,6 +20,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
     "nodemailer": "^6.7.3",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "request": "^2.88.2"
   }
 }
