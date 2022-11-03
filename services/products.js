@@ -1,6 +1,7 @@
 const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
+const axios = require('axios');
 
 async function saveProducts(product) {
 
@@ -14,6 +15,19 @@ async function saveProducts(product) {
         );
         
         message = 'Producto guardado correctamente';
+
+        const get = await this.getProducts("prueba");
+
+        //console.log(JSON.stringify(get.products));
+        const menSocket= JSON.stringify(get.products);
+
+        axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor&mensaje=${menSocket}`)
+            .then(response =>{
+                console.log("mensaje enviado");
+            })
+            .catch(error =>{
+                console.log(error);
+            })
 
         return { code: 201, message: message }
 

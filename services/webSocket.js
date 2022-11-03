@@ -41,7 +41,6 @@ async function processMessage(mensaje) {
                     console.log(error);
                 }
                
-
             }
         }
 
