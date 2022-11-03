@@ -85,7 +85,8 @@ async function getProducts(product) {
         ifnull(case when (select 1 from ofertas O where O.CodProducto=P.CodProducto and P.IdProveedor=O.cuit and now()>O.fecDesde and now()<O.fechasta) then
             'Activa'
             end,'No Activa') as EstadoOferta,
-        concat(concat(concat(concat(day(FecAlta),'/'),month(FecAlta)),'/'),year(FecAlta)) as FecAlta
+        concat(concat(concat(concat(day(FecAlta),'/'),month(FecAlta)),'/'),year(FecAlta)) as FecAlta,
+        IdProveedor
         from productos P 
         where 1 = 1`
 
