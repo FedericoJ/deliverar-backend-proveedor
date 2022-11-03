@@ -23,7 +23,7 @@ async function saveProducts(product) {
 
         axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor&mensaje=${menSocket}`)
             .then(response =>{
-                console.log("mensaje enviado");
+                console.log("mensaje de productos enviado");
             })
             .catch(error =>{
                 console.log(error);
@@ -58,6 +58,19 @@ async function saveMultipleProducts(product) {
                 }
     
             });
+
+            const get = await this.getProducts("prueba");
+
+            //console.log(JSON.stringify(get.products));
+            const menSocket= JSON.stringify(get.products);
+    
+            axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor&mensaje=${menSocket}`)
+                .then(response =>{
+                    console.log("mensaje de productos enviado");
+                })
+                .catch(error =>{
+                    console.log(error);
+                });
 
         }
       
@@ -175,6 +188,19 @@ async function updateProductByCode(product) {
 
         const data = helper.emptyOrRows(result);
 
+        const get = await this.getProducts("prueba");
+
+        //console.log(JSON.stringify(get.products));
+        const menSocket= JSON.stringify(get.products);
+
+        axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor&mensaje=${menSocket}`)
+            .then(response =>{
+                console.log("mensaje de productos enviado");
+            })
+            .catch(error =>{
+                console.log(error);
+            })
+
         return { code: 201, product: data };
 
     } catch (e) {
@@ -227,6 +253,19 @@ async function saveOffers(offer) {
         
         message = 'Oferta guardada correctamente';
 
+        const get = await this.getProducts("prueba");
+
+        //console.log(JSON.stringify(get.products));
+        const menSocket= JSON.stringify(get.products);
+
+        axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor&mensaje=${menSocket}`)
+            .then(response =>{
+                console.log("mensaje de productos enviado");
+            })
+            .catch(error =>{
+                console.log(error);
+            })
+
         return { code: 201, message: message }
 
     } catch (e) {
@@ -273,6 +312,19 @@ async function updateOfferByCode(offer) {
 
         const data = helper.emptyOrRows(result);
 
+        const get = await this.getProducts("prueba");
+
+        //console.log(JSON.stringify(get.products));
+        const menSocket= JSON.stringify(get.products);
+
+        axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor&mensaje=${menSocket}`)
+            .then(response =>{
+                console.log("mensaje de productos enviado");
+            })
+            .catch(error =>{
+                console.log(error);
+            })
+
         return { code: 201, product: data };
 
     } catch (e) {
@@ -294,6 +346,19 @@ async function deleteOfferbyCode(offer) {
         );
 
         const data = helper.emptyOrRows(result);
+
+        const get = await this.getProducts("prueba");
+
+        //console.log(JSON.stringify(get.products));
+        const menSocket= JSON.stringify(get.products);
+
+        axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor&mensaje=${menSocket}`)
+            .then(response =>{
+                console.log("mensaje de productos enviado");
+            })
+            .catch(error =>{
+                console.log(error);
+            })
 
         return { code: 201, offer: data };
 
