@@ -3,16 +3,15 @@ var StompJs = require("stompjs");
 var SockJS = require("sockjs-client");
 
 var stompClient = null;
-var socket = new SockJS('http://core.deliver.ar/websocket');
+var socket = new SockJS('http://core.deliver.ar/proveedor');
 const order = require('../services/orders');
     
 stompClient = StompJs.over(socket);
 
-function connect(){
-
-    stompClient.connect({}, function (frame) {
+async function connect(){
+   await stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/user', function (user) {
+        stompClient.subscribe('/topic/proveedor', function (user) {
                 processMessage(JSON.parse(user.body));
             });
         stompClient.send("/app/proveedor"); //cambiar cliente por el modulo que corresponda
@@ -33,13 +32,15 @@ async function processMessage(mensaje) {
     console.log(mensaje);
     if (mensaje !== undefined){
         //console.log(mensaje.contenido) 
+       
         if (mensaje.emisor =="franquicia"){
-            console.log("me llego mensaje de franquicia con: "+ mensaje.contenido)
+            console.log(mensaje.contenido)
+           /* let a=JSON.parse(mensaje.contenido)
                 try{
-                    var result = await order.saveOrder(JSON.parse(mensaje.contenido));
+                    var result = await order.saveOrder(a.mensaje);
                 }catch(error){
                     console.log(error);
-                }
+                }*/
                
             }
         }
