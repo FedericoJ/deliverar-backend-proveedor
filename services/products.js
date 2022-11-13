@@ -19,7 +19,9 @@ async function saveProducts(product) {
         const get = await this.getProducts("prueba");
 
         //console.log(JSON.stringify(get.products));
-        const body=get.products;
+        var body=get.products;
+        body.push({"tipo":"listado"});
+        
 
         axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor`,body)
             .then(response =>{

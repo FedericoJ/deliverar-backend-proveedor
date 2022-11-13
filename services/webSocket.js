@@ -35,14 +35,15 @@ async function processMessage(mensaje) {
        
         if (mensaje.emisor =="franquicia"){
             console.log(mensaje.contenido)
-           /* let a=JSON.parse(mensaje.contenido)
+            let a=JSON.parse(mensaje.contenido)
+            if (a.tipo =="nuevo-pedido"){
                 try{
                     var result = await order.saveOrder(a.mensaje);
                 }catch(error){
                     console.log(error);
-                }*/
-               
+                }
             }
+        }
         }
 
         //var jsonMensaje =JSON.parse(mensaje);

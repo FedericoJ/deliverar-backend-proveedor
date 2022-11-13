@@ -1,6 +1,7 @@
 const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
+const axios = require('axios');
 
 
 
@@ -154,6 +155,15 @@ async function saveOrder(order) {
             });
 
         }
+        const body={"_id":order._id.$oid ,"idPedido": result.insertId,"tipo":"nuevo-pedido"};
+
+        axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor`,body)
+            .then(response =>{
+                console.log("id pedido enviado " + result.insertId + "id pedido recibido " + order._id.$oid);
+            })
+            .catch(error =>{
+                console.log(error);
+            })
 
         let message = "Pedido creado correctamente";
 
