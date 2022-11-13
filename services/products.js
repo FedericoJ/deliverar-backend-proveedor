@@ -63,7 +63,8 @@ async function saveMultipleProducts(product) {
 
             const get = await this.getProducts("prueba");
 
-            const body=get.products;
+            var body=get.products;
+            body.push({"tipo":"listado"});
 
             axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor`,body)
                 .then(response =>{
@@ -192,7 +193,8 @@ async function updateProductByCode(product) {
         const get = await this.getProducts("prueba");
 
         //console.log(JSON.stringify(get.products));
-        const body=get.products;
+        var body=get.products;
+        body.push({"tipo":"listado"});
 
         axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor`,body)
             .then(response =>{
@@ -257,7 +259,8 @@ async function saveOffers(offer) {
         const get = await this.getProducts("prueba");
 
         //console.log(JSON.stringify(get.products));
-        const body=get.products;
+        var body=get.products;
+        body.push({"tipo":"listado"});
 
         axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor`,body)
             .then(response =>{
@@ -316,7 +319,8 @@ async function updateOfferByCode(offer) {
         const get = await this.getProducts("prueba");
 
         //console.log(JSON.stringify(get.products));
-        const body=get.products;
+        var body=get.products;
+        body.push({"tipo":"listado"});
 
         axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor`,body)
             .then(response =>{
@@ -351,7 +355,8 @@ async function deleteOfferbyCode(offer) {
         const get = await this.getProducts("prueba");
 
         //console.log(JSON.stringify(get.products));
-        const body=get.products;
+        var body=get.products;
+        body.push({"tipo":"listado"});
 
         axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor`,body)
             .then(response =>{
