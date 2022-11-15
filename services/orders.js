@@ -145,7 +145,8 @@ async function saveOrder(order) {
                 const result1 = await db.query(
                     `insert into detallepedido (idPedido, CodProducto, Cantidad, PrecioUnitario, FecAlta, IdProveedor) 
                     VALUES 
-                    (${result.insertId}, '${detail.CodProducto}', '${detail.cantidad}',(select Precio from productos P where P.CodProducto='${detail.CodProducto}' and P.IdProveedor='${order.IdProovedor}'),now(),'${order.IdProovedor}')`
+                    (${result.insertId}, '${detail.CodProducto}', '${detail.cantidad}',(select precio*(ifnull((select 1-(porcentaje/100) from ofertas O where O.CodProducto=P.CodProducto and O.cuit=P.IdProveedor and fecHasta > now()),1)) PrecioDesc
+                    from productos P where P.CodProducto='${detail.CodProducto}' and P.IdProveedor='${order.IdProovedor}'),now(),'${order.IdProovedor}')`
                 );
     
                 if (!result1.affectedRows) {
