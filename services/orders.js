@@ -193,6 +193,16 @@ async function updateOrderStatus(order) {
                 if (!result1.affectedRows) {
                     return { code: 400, message: "No se han podido finalizar los pedidos" };
                 }
+
+                const body={"idPedido": detail.idPedido,"tipo":"actualizacion-pedido","estado":"FINALIZADO"};
+
+                axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor`,body)
+                    .then(response =>{
+                        console.log("Pedido confirmado");
+                    })
+                    .catch(error =>{
+                        console.log(error);
+                    })
     
             });
         }
