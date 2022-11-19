@@ -8,7 +8,8 @@ async function query(sql, params) {
     const [results] = await connection.execute(sql, params);
     return results;
   } catch(err){
-    console.log(err.msg)
+    console.log(err)
+    await connection.end();
   }finally{
     await connection.end();
   }

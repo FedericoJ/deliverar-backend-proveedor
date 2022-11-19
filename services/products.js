@@ -47,8 +47,8 @@ async function saveMultipleProducts(product) {
        
         if (product.products.length > 0) {
 
-            product.products.forEach(async detail => {            
-    
+
+            await Promise.all(product.products.map(async (detail) => {
                 const result1 = await db.query(
                     `insert into productos (CodProducto, Descripcion,Imagen,Stock,Precio,MediaStock,FecAlta,Usuario,IdProveedor) 
                     VALUES 
@@ -58,8 +58,9 @@ async function saveMultipleProducts(product) {
                 if (!result1.affectedRows) {
                     return { code: 400, message: "No se han podido guardar los productos requeridos" };
                 }
-    
-            });
+              }));
+
+
 
             const get = await this.getProducts("prueba");
 
@@ -68,6 +69,7 @@ async function saveMultipleProducts(product) {
 
             axios.post(`http://core.deliver.ar/publicarMensaje?canal=proveedor`,body)
                 .then(response =>{
+                    console.log(body);
                     console.log("mensaje de productos enviado");
                 })
                 .catch(error =>{
