@@ -34,7 +34,7 @@ async function processMessage(mensaje) {
         //console.log(mensaje.contenido) 
        
         if (mensaje.emisor =="franquicia"){
-            console.log(mensaje.contenido)
+            //console.log(mensaje.contenido)
             let a=JSON.parse(mensaje.contenido)
             if (a.tipo =="nuevo-pedido"){
                 try{

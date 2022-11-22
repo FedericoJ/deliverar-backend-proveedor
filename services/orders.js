@@ -140,7 +140,7 @@ async function saveOrder(order) {
 
         if (order.detail.length>0) {
 
-            order.detail.forEach(async detail => {            
+            await Promise.all(order.detail.map(async (detail) => {            
     
                 const result1 = await db.query(
                     `insert into detallepedido (idPedido, CodProducto, Cantidad, PrecioUnitario, FecAlta, IdProveedor) 
@@ -153,7 +153,7 @@ async function saveOrder(order) {
                     return { code: 400, message: "No se han podido guardar los ingredientes utilizados" };
                 }
     
-            });
+            }));
 
         }
         const body={"_id":order._id.$oid ,"idPedido": result.insertId,"tipo":"nuevo-pedido"};
@@ -171,7 +171,7 @@ async function saveOrder(order) {
         return { code: 201, message: message }
 
     } catch (e) {
-
+        console.log(e.message);
         return { code: 400, message: e.message };
     }
 
